@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My Disciplinaries | Vortex Logistics</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body data-page="disciplinaries">
+
+  <header class="navbar">
+    <div class="logo">VORTEX <span>PORTAL</span></div>
+    <nav>
+      <a href="index.html">Main Site</a>
+      <button id="logout-btn" class="btn-secondary" style="cursor: pointer;">Log Out</button>
+    </nav>
+  </header>
+
+  <main id="dashboard-section" class="container" style="display: none;">
+    <div style="margin-bottom: 1.5rem;">
+      <h1 style="font-size: 2rem;">⚖️ My Disciplinary Record</h1>
+      <p style="color: var(--text-muted);">Signed in as <span id="driver-email" style="color: var(--accent);">Driver</span> • Only visible to you</p>
+    </div>
+
+    <nav class="portal-subnav">
+      <a href="portal.html" class="portal-tab">🏠 Dashboard</a>
+      <a href="tracking.html" class="portal-tab">📡 HaulMP Tracking</a>
+      <a href="fleet.html" class="portal-tab">🚛 Fleet Standards</a>
+      <a href="disciplinaries.html" class="portal-tab active">⚖️ My Disciplinaries</a>
+      <a href="docs.html" class="portal-tab">📘 Policies &amp; Docs</a>
+    </nav>
+
+    <!-- Summary Counters -->
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1rem; margin-bottom: 2rem;">
+      <div class="card" style="text-align: center;">
+        <span style="font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase;">Driver Strikes</span>
+        <h2 id="count-driver-strike" style="margin: 0.4rem 0 0 0; color: #ef4444;">0</h2>
+      </div>
+      <div class="card" style="text-align: center;">
+        <span style="font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase;">Staff Warnings</span>
+        <h2 id="count-staff-warn" style="margin: 0.4rem 0 0 0; color: #f59e0b;">0</h2>
+      </div>
+      <div class="card" style="text-align: center;">
+        <span style="font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase;">Staff Strikes</span>
+        <h2 id="count-staff-strike" style="margin: 0.4rem 0 0 0; color: #ef4444;">0</h2>
+      </div>
+    </div>
+
+    <!-- Private History List -->
+    <section>
+      <h2 style="text-align: left; font-size: 1.4rem; margin-bottom: 1rem;">Record History</h2>
+      <div id="disciplinaries-list" style="display: flex; flex-direction: column; gap: 1rem;">
+        <p style="color: var(--text-muted);">Loading your record...</p>
+      </div>
+    </section>
+  </main>
+
+  <script src="portal.js"></script>
+</body>
+</html>

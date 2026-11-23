@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charsets="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="stylesheet" href="style.css" />
+        <title> Vortex Logistics | Virtual Trucking Company</title>
+    </head>
+    <body>
+
+        <header class="navbar">
+            <img src="logo.png" alt="Vortex Logistics Logo" class="banner-corner-logo" />
+            <div class="logo">VORTEX <span> LOGISTICS</span></div>
+            
+            <nav>
+                <a href="#about">About Us</a>
+                <a href="#management">Meet the Team</a>
+                <a href="#gallery">Gallery</a>
+                <a href="#join">Join Us</a>
+                <a href="portal.html" class="btn-portal">Driver Portal</a>
+                </nav>
+        </header>
+
+        <section class="hero hero-banner">
+            <h1>Professional Virtual Haulage Across Europe</h1>
+            <p>Scheduled convoys, custom company liveries and a structured community for ETS2 &amp; ATS Drivers.</p>
+            <div class="hero-buttons">
+                <a href="#join" class="btn-primary">Apply To Drive</a>
+                <a href="portal.html" class="btn-secondary">Driver Login</a>
+            </div>
+        </section>
+
+        <section id="about" class="container">
+            <h2> About Our VTC</h2>
+            <p class="section-intro">
+                Welcome to Vortex Logistics—a premier Virtual Trucking Company (VTC) operating across the expansive highways of Euro Truck Simulator 2. Founded on a passion for authentic simulation and community camaraderie, we are dedicated to setting the gold standard for virtual transport solutions. At Vortex Logistics, we blend realistic convoy operations with a welcoming, driver-first environment. Whether you are a seasoned driver logging thousands of kilometers a week or a newcomer looking to learn the ropes of long-haul trucking, Vortex Logistics provides the ultimate platform to elevate your driving experience.
+            </p>
+
+        <section> 
+            <div class="cards-grid">
+                <div class="card">
+                    <h3>Weekly Convoys</h3>
+                    <p>Organised public and private drives every weekend with dedicated convoy control and route planning.</p>
+                </div>
+                <div class="card">
+                    <h3>Active Discord &amp; Logs</h3>
+                    <p>Track your mileage, earn driver ranks, and stay updated with live dispatch announcements</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="management" class="container" style="padding: 3.5rem 1.5rem;">
+            <h2 style="text-align: center; margin-bottom: 0.5rem;">Meet the Management</h2>
+            <p style="text-align: center; color: var(--text-muted); max-width: 650px; margin: 0 auto 2.5rem auto;">
+                The leadership team keeping Vortex Logistics organised, active, and running smoothly across every convoy.
+            </p>
+
+            <div class="grid-2" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1.5rem;">
+                <div class="card">
+                    <span style="display: inline-blocks; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; color: var(--account); margin-bottom: 0.35rem;">
+                        Company Director
+                    </span>
+                    <h3 style="margin: 0 0 0.5rem 0;">Dylan</h3>
+                    <p style="margin: 0; color: var(--text-muted);">
+                         Founder and overall head of Vortex Logistics - Oversees company direction, partnerships and core systems. 
+                    </p>
+                </div>
+        
+                <div class="card">
+                    <span style="display: inline-blocks; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; color: var(--account); margin-bottom: 0.35rem;">
+                        General Manager
+                    </span>
+                    <h3 style="margin: 0 0 0.5rem 0;">Khye</h3>
+                    <p style="margin: 0; color: var(--text-muted);">
+                        Leads day-to-day VTC Management, staff coordination, and enforcement of community standards. 
+                    </p>
+                </div>
+
+                <div class="card">
+                    <span style="display: inline-blocks; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; color: var(--account); margin-bottom: 0.35rem;">
+                        Assistant General Manager
+                    </span>
+                    <h3 style="margin: 0 0 0.5rem 0;">Eve</h3>
+                    <p style="margin: 0; color: var(--text-muted);">
+                    Supports executive operations, assists with staff oversight, and steps in across leadership duties. 
+                    </p>
+                </div>
+
+                <div class="card">
+                    <span style="display: inline-blocks; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; color: var(--account); margin-bottom: 0.35rem;">
+                       Transport Manager
+                    </span>
+                    <h3 style="margin: 0 0 0.5rem 0;">Tay Tay</h3>
+                    <p style="margin: 0; color: var(--text-muted);">
+                    Managed convoy planning, HaulMP tracking, route logistics, and driver fleet standards. 
+                </div>
+            </div>
+            </div>
+            </section>
+                
+        <section id="gallery" class="container">
+            <h2> Gallery</h2>
+            <p class="section-intro">
+                Gallery is coming soon!
+            </p>     
+
+        <section id="join" class="container join-box">
+            <h2>Ready to Hit the Road?</h2>
+            <p>Requirements: Age 16+, legal copy of ETS2, and a working microphone for convoy comms.</p>
+            <a href="https://discord.gg/aRnYxaQwjm" class="btn-primary">Join Our Discord Server</a>
+        </section>
+
+
+        <footer>
+            <p>&copy; 2026 Vortex Logistics VTC. All Rights Reserved.</p>
+        </footer>
+                
+    <button id="scroll-top-btn" title="Back to Top" aria-label="Scroll to Top">Top</button>
+        <script>
+            const scrollTopBtn = document.getElementById("scroll-top-btn");
+
+                window.addEventListener("scroll", () => {
+                    if (window.scrollY > 300 ) {
+                scrollTopBtn.classList.add("show");
+                    } else {
+                scrollTopBtn.classList.remove("show");
+            }
+        });
+
+        scrollTopBtn.addEventListener("click", () => {
+            window.scrollTo({top: 0, behaviour: "smooth" });
+
+        });
+
+        </script>
+    </body>
+</html>

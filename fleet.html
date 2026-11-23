@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Fleet Standards | Vortex Logistics</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body data-page="fleet">
+
+  <header class="navbar">
+    <div class="logo">VORTEX <span>PORTAL</span></div>
+    <nav>
+      <a href="index.html">Main Site</a>
+      <button id="logout-btn" class="btn-secondary" style="cursor: pointer;">Log Out</button>
+    </nav>
+  </header>
+
+  <main id="dashboard-section" class="container" style="display: none;">
+    <div style="margin-bottom: 1.5rem;">
+      <h1 style="font-size: 2rem;">🚛 Fleet &amp; Convoy Standards</h1>
+      <p style="color: var(--text-muted);">Signed in as <span id="driver-email" style="color: var(--accent);">Driver</span></p>
+    </div>
+
+    <nav class="portal-subnav">
+      <a href="portal.html" class="portal-tab">🏠 Dashboard</a>
+      <a href="tracking.html" class="portal-tab">📡 HaulMP Tracking</a>
+      <a href="fleet.html" class="portal-tab active">🚛 Fleet Standards</a>
+      <a href="disciplinaries.html" class="portal-tab">⚖️ My Disciplinaries</a>
+      <a href="docs.html" class="portal-tab">📘 Policies &amp; Docs</a>
+    </nav>
+
+  <section>
+        <h3 style="margin-top: 0;">Approved Company Trucks</h3>
+        <ul style="color: var(--text-muted); padding-left: 1.25rem; line-height: 1.85; margin-top: 0.5rem;">
+          <li><strong>Scania:</strong> S Series (Next Gen)</li>
+          <li><strong>Volvo:</strong> FH6 Globetrotter XXL</li>
+        </ul>
+      </div>
+</section>
+
+      <div class="card">
+        <h3 style="margin-top: 0;">TruckersMP &amp; Convoy Setup</h3>
+        <ul style="color: var(--text-muted); padding-left: 1.25rem; line-height: 1.85; margin-top: 0.5rem;">
+          <li><strong>Accessories:</strong> Clean lightbars only; keep beacons off during convoys unless you are Convoy Control.</li>
+          <li><strong>Pre-Convoy Prep:</strong> Park at the starting bay <strong>15 minutes early</strong> with 0% damage and a full fuel tank.</li>
+          <li><strong>Spacing:</strong> Maintain at least <strong>70m–100m</strong> gap on highways to prevent lag crashes.</li>
+        </ul>
+      </div>
+    </div>
+  </main>
+
+  <script src="portal.js"></script>
+</body>
+</html>

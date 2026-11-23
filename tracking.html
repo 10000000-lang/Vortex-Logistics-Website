@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HaulMP Tracking | Vortex Logistics</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body data-page="tracking">
+
+  <header class="navbar">
+    <div class="logo">VORTEX <span>PORTAL</span></div>
+    <nav>
+      <a href="index.html">Main Site</a>
+      <button id="logout-btn" class="btn-secondary" style="cursor: pointer;">Log Out</button>
+    </nav>
+  </header>
+
+  <main id="dashboard-section" class="container" style="display: none;">
+    <div style="margin-bottom: 1.5rem;">
+      <h1 style="font-size: 2rem;">📡 HaulMP Driver Tracking</h1>
+      <p style="color: var(--text-muted);">Signed in as <span id="driver-email" style="color: var(--accent);">Driver</span></p>
+    </div>
+
+    <nav class="portal-subnav">
+      <a href="portal.html" class="portal-tab">🏠 Dashboard</a>
+      <a href="tracking.html" class="portal-tab active">📡 HaulMP Tracking</a>
+      <a href="fleet.html" class="portal-tab">🚛 Fleet Standards</a>
+      <a href="disciplinaries.html" class="portal-tab">⚖️ My Disciplinaries</a>
+      <a href="docs.html" class="portal-tab">📘 Policies &amp; Docs</a>
+    </nav>
+
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.25rem;">
+      <div class="card">
+        <h3 style="margin-top: 0;">Vortex Logistics on HaulMP</h3>
+        <p style="color: var(--text-muted); margin-top: 0.5rem;">
+          Open our official HaulMP company dashboard to view driver leaderboards, logged deliveries, and active jobs on the live map.
+        </p>
+        <div style="display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 1.25rem;">
+          <!-- Replace with your exact HaulMP VTC URL -->
+          <a href="https://vtc.haulmp.com/Vortex#drivers" target="_blank" rel="noopener noreferrer" class="btn-primary" style="text-decoration: none;">Open HaulMP VTC Page</a>
+          <a href="https://map.haulmp.com/" target="_blank" rel="noopener noreferrer" class="btn-secondary" style="text-decoration: none;">Open Live Map</a>
+        </div>
+      </div>
+
+  <script src="portal.js"></script>
+</body>
+</html>

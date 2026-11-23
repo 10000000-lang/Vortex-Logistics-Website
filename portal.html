@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Driver Portal | Vortex Logistics</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body data-page="home">
+
+  <header class="navbar">
+    <img src="logo.png" alt="Vortex Logistics Logo" class="banner-corner-logo" />
+    <div class="logo">VORTEX <span>PORTAL</span></div>
+    <nav>
+      <a href="index.html">Main Site</a>
+      <button id="logout-btn" class="btn-secondary" style="display: none; cursor: pointer;">Log Out</button>
+    </nav>
+  </header>
+
+  <!-- LOGIN BOX -->
+  <section id="login-section" style="max-width: 440px; margin: 5rem auto; padding: 0 1.5rem;">
+    <div class="card">
+      <h2 style="margin-bottom: 0.5rem;">Driver Login</h2>
+      <p style="text-align: center; margin-bottom: 1.5rem;">Sign in with your VTC driver credentials.</p>
+      <form id="login-form" style="display: flex; flex-direction: column; gap: 1rem;">
+        <input type="email" id="email" class="portal-input" placeholder="Driver Email" required />
+        <input type="password" id="password" class="portal-input" placeholder="Password" required />
+        <button type="submit" class="btn-primary" style="border: none; cursor: pointer; font-size: 1rem;">Sign In</button>
+      </form>
+      <p id="login-error" style="color: #ef4444; margin-top: 1rem; text-align: center; font-size: 0.9rem;"></p>
+    </div>
+  </section>
+
+  <!-- PROTECTED DASHBOARD -->
+  <main id="dashboard-section" class="container" style="display: none;">
+    <div style="margin-bottom: 1.5rem;">
+      <h1 style="font-size: 2rem;">Welcome back, <span id="driver-email" style="color: var(--accent);">Driver</span></h1>
+      <p style="color: var(--text-muted);">Live convoy schedule and latest VTC announcements.</p>
+    </div>
+
+<nav class="portal-subnav">
+      <a href="portal.html" class="portal-tab active">🏠 Dashboard</a>
+      <a href="tracking.html" class="portal-tab">📡 HaulMP Tracking</a>
+      <a href="fleet.html" class="portal-tab">🚛 Fleet Standards</a>
+      <a href="disciplinaries.html" class="portal-tab">⚖️ My Disciplinaries</a>
+      <a href="docs.html" class="portal-tab">📘 Policies &amp; Docs</a>
+    </nav>
+
+    <!-- Upcoming Convoy -->
+    <section style="margin-bottom: 3rem;">
+      <h2 style="text-align: left; font-size: 1.5rem; margin-bottom: 1rem;">🚚 Upcoming Convoy</h2>
+      <div id="latest-convoy-card" class="card">
+        <p style="color: var(--text-muted);">Loading upcoming convoy...</p>
+      </div>
+    </section>
+
+    <!-- Driver Announcements -->
+    <section>
+      <h2 style="text-align: left; font-size: 1.5rem; margin-bottom: 1rem;">📢 Driver Announcements</h2>
+      <div id="announcements-list" style="display: flex; flex-direction: column; gap: 1rem;">
+        <p style="color: var(--text-muted);">Loading announcements...</p>
+      </div>
+    </section>
+  </main>
+
+  <script src="portal.js"></script>
+</body>
+</html>

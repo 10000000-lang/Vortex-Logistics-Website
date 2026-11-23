@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Policies &amp; Docs | Vortex Logistics</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    .docs-layout {
+      display: grid;
+      grid-template-columns: 300px 1fr;
+      gap: 1.5rem;
+      align-items: start;
+    }
+
+    @media (max-width: 820px) {
+      .docs-layout {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .docs-sidebar {
+      background-color: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1.2rem;
+      position: sticky;
+      top: 85px;
+    }
+
+    .doc-category-label {
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+      margin: 1rem 0 0.4rem 0.4rem;
+    }
+
+    .doc-nav-item {
+      display: block;
+      width: 100%;
+      text-align: left;
+      background: transparent;
+      border: none;
+      color: var(--text-main);
+      padding: 0.65rem 0.8rem;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.95rem;
+      transition: background 0.15s, color 0.15s;
+      margin-bottom: 0.25rem;
+    }
+
+    .doc-nav-item:hover {
+      background-color: rgba(59, 130, 246, 0.12);
+    }
+
+    .doc-nav-item.active {
+      background-color: var(--accent);
+      color: #fff;
+      font-weight: 600;
+    }
+
+    .doc-reader {
+      background-color: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 2rem;
+      min-height: 360px;
+    }
+
+    .doc-reader-body {
+      color: var(--text-main);
+      white-space: pre-line;
+      line-height: 1.75;
+      margin-top: 1.2rem;
+      font-size: 1.02rem;
+    }
+  </style>
+</head>
+<body data-page="docs">
+
+  <header class="navbar">
+    <div class="logo">VORTEX <span>PORTAL</span></div>
+    <nav>
+      <a href="index.html">Main Site</a>
+      <button id="logout-btn" class="btn-secondary" style="cursor: pointer;">Log Out</button>
+    </nav>
+  </header>
+
+  <main id="dashboard-section" class="container" style="display: none;">
+    <div style="margin-bottom: 1.5rem;">
+      <h1 style="font-size: 2rem;">📘 Policies &amp; Documentation</h1>
+      <p style="color: var(--text-muted);">Signed in as <span id="driver-email" style="color: var(--accent);">Driver</span></p>
+    </div>
+
+    <nav class="portal-subnav">
+      <a href="portal.html" class="portal-tab">🏠 Dashboard</a>
+      <a href="tracking.html" class="portal-tab">📡 HaulMP Tracking</a>
+      <a href="fleet.html" class="portal-tab">🚛 Fleet Standards</a>
+      <a href="disciplinaries.html" class="portal-tab">⚖️ My Disciplinaries</a>
+      <a href="docs.html" class="portal-tab active">📘 Policies &amp; Docs</a>
+    </nav>
+
+    <div class="docs-layout">
+      <aside class="docs-sidebar">
+        <input type="text" id="doc-search-input" class="portal-input" style="margin-bottom: 1rem;" placeholder="🔍 Search docs & policies..." />
+        <div id="docs-sidebar-list">
+          <p style="color: var(--text-muted); font-size: 0.9rem;">Loading articles...</p>
+        </div>
+      </aside>
+
+      <article id="doc-reader-pane" class="doc-reader">
+        <p style="color: var(--text-muted);">Select an article from the sidebar to read it.</p>
+      </article>
+    </div>
+  </main>
+
+  <script src="portal.js"></script>
+</body>
+</html>
