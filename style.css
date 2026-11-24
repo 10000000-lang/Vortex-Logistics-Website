@@ -331,3 +331,150 @@ body[data-page] .container {
     width: 58px; 
   }
 }
+
+body {
+  overflow-x: hidden;
+}
+
+.drawer-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.65);
+  z-index: 1000;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.drawer-panel {
+  width: 100%;
+  max-width: 400px;
+  height: 100%;
+  background: #131720;
+  border-left: 1px solid #262d3d;
+  color: #f8fafc;
+  display: flex;
+  flex-direction: column;
+  box-shadow: -10px 0 30px rgba(0, 0, 0, 0.6);
+  transform: translateX(100%);
+  transition: transform 0.25s ease;
+}
+
+.drawer-panel.open {
+  transform: translateX(0);
+}
+
+.drawer-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 18px 20px;
+  border-bottom: 1px solid #262d3d;
+}
+
+.drawer-header h2 {
+  margin: 0;
+  font-size: 1.2rem;
+}
+
+.drawer-body {
+  padding: 20px;
+  overflow-y: auto;
+  flex: 1;
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  color: #94a3b8;
+  font-size: 26px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.close-btn:hover {
+  color: #ffffff;
+}
+
+.settings-form h3 {
+  font-size: 0.95rem;
+  color: #3b82f6;
+  margin: 0 0 12px 0;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 12px;
+}
+
+.form-group label {
+  font-size: 0.85rem;
+  color: #cbd5e1;
+  margin-bottom: 5px;
+}
+
+.form-group small {
+  color: #64748b;
+  font-size: 0.75rem;
+  margin-top: 4px;
+}
+
+.drawer-divider {
+  border: 0;
+  border-top: 1px solid #262d3d;
+  margin: 20px 0;
+}
+
+.status-text {
+  font-size: 0.85rem;
+  margin: 8px 0 0 0;
+}
+
+.drawer-panel .portal-input:disabled,
+.drawer-panel input:disabled {
+  color: #64748b;
+  background: rgba(15, 23, 42, 0.55);
+  border-color: #1e293b;
+  opacity: 1;
+  cursor: not-allowed;
+}
+
+/* Smooth Page Entrance & Exit */
+@keyframes portalPageEnter {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+#dashboard-section {
+  animation: portalPageEnter 0.75s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  transition: opacity 0.55s ease, transform 0.55s ease;
+}
+
+body.page-leaving #dashboard-section {
+  opacity: 0;
+  transform: translateY(-14px);
+}
+
+/* Sleek Top Loading Bar on Tab Click (stays snappy) */
+.portal-progress-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 3px;
+  width: 0%;
+  background: linear-gradient(90deg, #3b82f6, #60a5fa);
+  box-shadow: 0 0 10px rgba(59, 130, 246, 0.7);
+  z-index: 2000;
+  transition: width 0.22s ease-out;
+  pointer-events: none;
+}
+
+body.page-leaving .portal-progress-bar {
+  width: 100%;
+}

@@ -7,14 +7,24 @@ const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 const pageType = document.body.dataset.page || "home";
 const loginSection = document.getElementById("login-section");
 const dashboardSection = document.getElementById("dashboard-section");
+const openSettingsBtn = document.getElementById("open-settings-btn");
 const logoutBtn = document.getElementById("logout-btn");
 const loginForm = document.getElementById("login-form");
+const forgotPasswordBtn = document.getElementById("forgot-password-btn");
 const loginError = document.getElementById("login-error");
 const driverEmailSpan = document.getElementById("driver-email");
 const docSearchInput = document.getElementById("doc-search-input");
 
+// Right-Side Account Settings Drawer elements
+const settingsBackdrop = document.getElementById("settings-drawer-backdrop");
+const settingsDrawer = document.getElementById("settings-drawer");
+const closeSettingsBtn = document.getElementById("close-settings-btn");
+const profileSettingsForm = document.getElementById("profile-settings-form");
+const changePasswordForm = document.getElementById("change-password-form");
+
 let allDocs = [];
 let activeDocId = null;
+let isPasswordRecovery = false;
 
 // 2. Check session & protect all sub-pages
 async function checkSession() {
@@ -33,15 +43,20 @@ async function checkSession() {
 function showLogin() {
   if (loginSection) loginSection.style.display = "block";
   if (dashboardSection) dashboardSection.style.display = "none";
+  if (openSettingsBtn) openSettingsBtn.style.display = "none";
   if (logoutBtn) logoutBtn.style.display = "none";
+  if (settingsBackdrop) settingsBackdrop.style.display = "none";
+  if (settingsDrawer) settingsDrawer.classList.remove("open");
 }
 
 function showDashboard(user) {
   if (loginSection) loginSection.style.display = "none";
   if (dashboardSection) dashboardSection.style.display = "block";
+  if (openSettingsBtn) openSettingsBtn.style.display = "inline-block";
   if (logoutBtn) logoutBtn.style.display = "inline-block";
 
-  if (driverEmailSpan) driverEmailSpan.textContent = user.email;
+  const displayName = (user.user_metadata && user.user_metadata.username) || user.email;
+  if (driverEmailSpan) driverEmailSpan.textContent = displayName;
 
   if (pageType === "home") {
     loadLatestConvoy();
@@ -53,13 +68,16 @@ function showDashboard(user) {
   }
 }
 
-// 3. Login & Logout handlers
+// 3. Login, Forgot Password & Logout handlers
 if (loginForm) {
   loginForm.addEventListener("submit", async (e) => {
     e.preventDefault();
-    loginError.textContent = "Signing in...";
+    if (loginError) {
+      loginError.style.color = "#94a3b8";
+      loginError.textContent = "Signing in...";
+    }
 
-    const email = document.getElementById("email").value;
+    const email = document.getElementById("email").value.trim();
     const password = document.getElementById("password").value;
 
     const { data, error } = await supabaseClient.auth.signInWithPassword({
@@ -68,10 +86,49 @@ if (loginForm) {
     });
 
     if (error) {
-      loginError.textContent = error.message;
+      if (loginError) {
+        loginError.style.color = "#ef4444";
+        loginError.textContent = error.message;
+      }
     } else {
-      loginError.textContent = "";
+      if (loginError) loginError.textContent = "";
       showDashboard(data.user);
+    }
+  });
+}
+
+if (forgotPasswordBtn) {
+  forgotPasswordBtn.addEventListener("click", async () => {
+    const emailInput = document.getElementById("email");
+    const email = emailInput ? emailInput.value.trim() : "";
+
+    if (!email) {
+      if (loginError) {
+        loginError.style.color = "#f59e0b";
+        loginError.textContent = "Enter your driver email above first, then click Forgot your password.";
+      }
+      return;
+    }
+
+    if (loginError) {
+      loginError.style.color = "#94a3b8";
+      loginError.textContent = "Sending password reset email...";
+    }
+
+    const { error } = await supabaseClient.auth.resetPasswordForEmail(email, {
+      redirectTo: `${window.location.origin}/portal.html`,
+    });
+
+    if (error) {
+      if (loginError) {
+        loginError.style.color = "#ef4444";
+        loginError.textContent = error.message;
+      }
+    } else {
+      if (loginError) {
+        loginError.style.color = "#22c55e";
+        loginError.textContent = "Password reset link sent! Check your inbox (and spam folder).";
+      }
     }
   });
 }
@@ -83,6 +140,185 @@ if (logoutBtn) {
       window.location.href = "portal.html";
     } else {
       showLogin();
+    }
+  });
+}
+
+supabaseClient.auth.onAuthStateChange((event, session) => {
+  if (event === "PASSWORD_RECOVERY" && session) {
+    isPasswordRecovery = true;
+    showDashboard(session.user);
+    openSettingsDrawer();
+
+    const currentGroup = document.getElementById("current-password-group");
+    const currentInput = document.getElementById("current-password");
+    if (currentGroup) currentGroup.style.display = "none";
+    if (currentInput) currentInput.required = false;
+
+    const passwordStatus = document.getElementById("password-status-msg");
+    if (passwordStatus) {
+      passwordStatus.style.color = "#3b82f6";
+      passwordStatus.textContent = "Enter and save your new password below.";
+    }
+  }
+});
+
+// 3b. Account Settings Right-Side Drawer & Forms
+async function loadAccountSettings() {
+  const { data: { user }, error } = await supabaseClient.auth.getUser();
+  if (error || !user) return;
+
+  const emailInput = document.getElementById("settings-email");
+  const usernameInput = document.getElementById("settings-username");
+  const discordInput = document.getElementById("settings-discord");
+
+  if (emailInput) emailInput.value = user.email || "";
+  if (user.user_metadata) {
+    if (usernameInput) usernameInput.value = user.user_metadata.username || "";
+    if (discordInput) discordInput.value = user.user_metadata.discord_id || "Not linked";
+  }
+}
+
+function openSettingsDrawer() {
+  if (!settingsBackdrop || !settingsDrawer) return;
+  settingsBackdrop.style.display = "flex";
+  requestAnimationFrame(() => {
+    settingsDrawer.classList.add("open");
+  });
+
+  const profileStatus = document.getElementById("profile-status-msg");
+  const passwordStatus = document.getElementById("password-status-msg");
+  if (profileStatus) profileStatus.textContent = "";
+  if (passwordStatus) passwordStatus.textContent = "";
+  loadAccountSettings();
+}
+
+function closeSettingsDrawer() {
+  if (!settingsBackdrop || !settingsDrawer) return;
+  settingsDrawer.classList.remove("open");
+  setTimeout(() => {
+    if (!settingsDrawer.classList.contains("open")) {
+      settingsBackdrop.style.display = "none";
+    }
+  }, 250);
+}
+
+if (openSettingsBtn) {
+  openSettingsBtn.addEventListener("click", openSettingsDrawer);
+}
+
+if (closeSettingsBtn) {
+  closeSettingsBtn.addEventListener("click", closeSettingsDrawer);
+}
+
+if (settingsBackdrop) {
+  let pointerDownOnBackdrop = false;
+
+  settingsBackdrop.addEventListener("mousedown", (e) => {
+    pointerDownOnBackdrop = e.target === settingsBackdrop;
+  });
+
+  settingsBackdrop.addEventListener("click", (e) => {
+    const selectedText = window.getSelection ? window.getSelection().toString() : "";
+    if (pointerDownOnBackdrop && e.target === settingsBackdrop && !selectedText) {
+      closeSettingsDrawer();
+    }
+    pointerDownOnBackdrop = false;
+  });
+}
+
+if (profileSettingsForm) {
+  profileSettingsForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const statusMsg = document.getElementById("profile-status-msg");
+    const username = document.getElementById("settings-username").value.trim();
+
+    if (statusMsg) {
+      statusMsg.textContent = "Saving...";
+      statusMsg.style.color = "#94a3b8";
+    }
+
+    const { error } = await supabaseClient.auth.updateUser({
+      data: { username }
+    });
+
+    if (statusMsg) {
+      if (error) {
+        statusMsg.textContent = `Error: ${error.message}`;
+        statusMsg.style.color = "#ef4444";
+      } else {
+        statusMsg.textContent = "Profile details updated!";
+        statusMsg.style.color = "#22c55e";
+        if (driverEmailSpan && username) driverEmailSpan.textContent = username;
+      }
+    }
+  });
+}
+
+if (changePasswordForm) {
+  changePasswordForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const statusMsg = document.getElementById("password-status-msg");
+    const currentPasswordInput = document.getElementById("current-password");
+    const currentPassword = currentPasswordInput ? currentPasswordInput.value : "";
+    const newPassword = document.getElementById("new-password").value;
+    const confirmPassword = document.getElementById("confirm-password").value;
+
+    if (newPassword !== confirmPassword) {
+      if (statusMsg) {
+        statusMsg.textContent = "New passwords do not match.";
+        statusMsg.style.color = "#ef4444";
+      }
+      return;
+    }
+
+    if (statusMsg) {
+      statusMsg.textContent = "Verifying and updating password...";
+      statusMsg.style.color = "#94a3b8";
+    }
+
+    if (!isPasswordRecovery && currentPasswordInput) {
+      const { data: { user } } = await supabaseClient.auth.getUser();
+      if (!user || !user.email) {
+        if (statusMsg) {
+          statusMsg.textContent = "Session error. Please log in again.";
+          statusMsg.style.color = "#ef4444";
+        }
+        return;
+      }
+
+      const { error: verifyError } = await supabaseClient.auth.signInWithPassword({
+        email: user.email,
+        password: currentPassword,
+      });
+
+      if (verifyError) {
+        if (statusMsg) {
+          statusMsg.textContent = "Current password is incorrect.";
+          statusMsg.style.color = "#ef4444";
+        }
+        return;
+      }
+    }
+
+    const { error } = await supabaseClient.auth.updateUser({
+      password: newPassword
+    });
+
+    if (statusMsg) {
+      if (error) {
+        statusMsg.textContent = `Error: ${error.message}`;
+        statusMsg.style.color = "#ef4444";
+      } else {
+        statusMsg.textContent = "Password updated successfully!";
+        statusMsg.style.color = "#22c55e";
+        changePasswordForm.reset();
+
+        isPasswordRecovery = false;
+        const currentGroup = document.getElementById("current-password-group");
+        if (currentGroup) currentGroup.style.display = "flex";
+        if (currentPasswordInput) currentPasswordInput.required = true;
+      }
     }
   });
 }
@@ -315,5 +551,174 @@ if (docSearchInput) {
     renderSidebar(filterDocs(query));
   });
 }
+
+// 7. Smooth Page Transition Between Portal Tabs
+(function initPageTransitions() {
+  const progressBar = document.createElement("div");
+  progressBar.className = "portal-progress-bar";
+  document.body.appendChild(progressBar);
+
+  window.addEventListener("pageshow", () => {
+    document.body.classList.remove("page-leaving");
+  });
+
+  document.querySelectorAll(".portal-tab").forEach((tab) => {
+    tab.addEventListener("click", (e) => {
+      const targetUrl = tab.getAttribute("href");
+      if (!targetUrl || tab.classList.contains("active")) return;
+
+      e.preventDefault();
+      document.body.classList.add("page-leaving");
+
+      setTimeout(() => {
+        window.location.href = targetUrl;
+      }, 550);
+    });
+  });
+})();
+
+// 8. Sidebar Selection Guard & Animated Close Menu Button
+(function initSidebarControls() {
+  const sidebarEl =
+    document.getElementById("sidebar-panel") ||
+    document.getElementById("docs-sidebar") ||
+    document.querySelector(".docs-sidebar, .sidebar-panel, aside.sidebar");
+
+  if (!sidebarEl) return;
+
+  const backdropEl =
+    sidebarEl.closest(".sidebar-backdrop, .drawer-backdrop, #sidebar-backdrop") || null;
+
+  // Inject close button styles once
+  if (!document.getElementById("vortex-sidebar-close-style")) {
+    const styleEl = document.createElement("style");
+    styleEl.id = "vortex-sidebar-close-style";
+    styleEl.textContent = `
+      .vortex-sidebar-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.75rem;
+        padding-bottom: 0.65rem;
+        margin-bottom: 0.75rem;
+        border-bottom: 1px solid var(--border, #262d3d);
+      }
+      .vortex-sidebar-title {
+        font-size: 0.8rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: var(--text-muted, #94a3b8);
+      }
+      .vortex-close-menu-btn {
+        width: 32px;
+        height: 32px;
+        border-radius: 8px;
+        border: 1px solid rgba(148, 163, 184, 0.25);
+        background: rgba(30, 41, 59, 0.75);
+        color: #cbd5e1;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition:
+          background-color 0.22s ease,
+          border-color 0.22s ease,
+          color 0.22s ease,
+          transform 0.32s cubic-bezier(0.22, 1, 0.36, 1);
+      }
+      .vortex-close-menu-btn .vortex-close-x {
+        display: inline-block;
+        font-size: 1.3rem;
+        line-height: 1;
+        transition: transform 0.32s cubic-bezier(0.22, 1, 0.36, 1);
+      }
+      .vortex-close-menu-btn:hover {
+        background: rgba(239, 68, 68, 0.16);
+        border-color: rgba(239, 68, 68, 0.55);
+        color: #f87171;
+        transform: scale(1.06);
+      }
+      .vortex-close-menu-btn:hover .vortex-close-x {
+        transform: rotate(90deg);
+      }
+      .vortex-close-menu-btn:active,
+      .vortex-close-menu-btn.is-closing {
+        transform: scale(0.88) rotate(90deg);
+        opacity: 0.65;
+      }
+      .vortex-sidebar-collapsed {
+        display: none !important;
+      }
+    `;
+    document.head.appendChild(styleEl);
+  }
+
+  function hideSidebarWithAnimation() {
+    const closeBtn = sidebarEl.querySelector(".vortex-close-menu-btn");
+    if (closeBtn) closeBtn.classList.add("is-closing");
+
+    sidebarEl.style.transition = "opacity 0.28s ease, transform 0.28s ease";
+    sidebarEl.style.opacity = "0";
+    sidebarEl.style.transform = "translateX(-12px)";
+
+    setTimeout(() => {
+      if (backdropEl) {
+        backdropEl.classList.remove("open");
+        backdropEl.style.display = "none";
+      } else {
+        sidebarEl.classList.add("vortex-sidebar-collapsed");
+      }
+      sidebarEl.style.opacity = "";
+      sidebarEl.style.transform = "";
+      if (closeBtn) closeBtn.classList.remove("is-closing");
+    }, 280);
+  }
+
+  // Add animated close button at the top of the sidebar if not already present
+  if (!sidebarEl.querySelector(".vortex-close-menu-btn")) {
+    const headerBar = document.createElement("div");
+    headerBar.className = "vortex-sidebar-header";
+
+    const label = document.createElement("span");
+    label.className = "vortex-sidebar-title";
+    label.textContent = "Menu";
+
+    const closeBtn = document.createElement("button");
+    closeBtn.type = "button";
+    closeBtn.className = "vortex-close-menu-btn";
+    closeBtn.setAttribute("aria-label", "Close menu");
+    closeBtn.title = "Close menu";
+    closeBtn.innerHTML = `<span class="vortex-close-x" aria-hidden="true">&times;</span>`;
+
+    closeBtn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      hideSidebarWithAnimation();
+    });
+
+    headerBar.appendChild(label);
+    headerBar.appendChild(closeBtn);
+    sidebarEl.insertBefore(headerBar, sidebarEl.firstChild);
+  }
+
+  // Prevent holding down the mouse inside the sidebar to select text from closing it
+  sidebarEl.addEventListener("mousedown", (e) => {
+    e.stopPropagation();
+  });
+
+  if (backdropEl) {
+    let downOnBackdrop = false;
+    backdropEl.addEventListener("mousedown", (e) => {
+      downOnBackdrop = e.target === backdropEl;
+    });
+    backdropEl.addEventListener("click", (e) => {
+      const hasSelection = window.getSelection && window.getSelection().toString().length > 0;
+      if (downOnBackdrop && e.target === backdropEl && !hasSelection) {
+        hideSidebarWithAnimation();
+      }
+      downOnBackdrop = false;
+    });
+  }
+})();
 
 checkSession();

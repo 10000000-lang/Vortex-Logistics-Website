@@ -10,10 +10,12 @@
 <body data-page="fleet">
 
   <header class="navbar">
+    <img src="logo.png" alt="Vortex Logistics Logo" class="banner-corner-logo" />
     <div class="logo">VORTEX <span>PORTAL</span></div>
     <nav>
       <a href="index.html">Main Site</a>
-      <button id="logout-btn" class="btn-secondary" style="cursor: pointer;">Log Out</button>
+      <button id="open-settings-btn" class="btn-secondary" style="display: none; cursor: pointer;">Account Settings</button>
+      <button id="logout-btn" class="btn-secondary" style="display: none; cursor: pointer;">Log Out</button>
     </nav>
   </header>
 
@@ -31,14 +33,14 @@
       <a href="docs.html" class="portal-tab">📘 Policies &amp; Docs</a>
     </nav>
 
-  <section>
+    <section style="display: flex; flex-direction: column; gap: 1rem;">
+      <div class="card">
         <h3 style="margin-top: 0;">Approved Company Trucks</h3>
         <ul style="color: var(--text-muted); padding-left: 1.25rem; line-height: 1.85; margin-top: 0.5rem;">
           <li><strong>Scania:</strong> S Series (Next Gen)</li>
           <li><strong>Volvo:</strong> FH6 Globetrotter XXL</li>
         </ul>
       </div>
-</section>
 
       <div class="card">
         <h3 style="margin-top: 0;">TruckersMP &amp; Convoy Setup</h3>
@@ -48,8 +50,65 @@
           <li><strong>Spacing:</strong> Maintain at least <strong>70m–100m</strong> gap on highways to prevent lag crashes.</li>
         </ul>
       </div>
-    </div>
+    </section>
   </main>
+
+  <!-- RIGHT-SIDE ACCOUNT SETTINGS DRAWER -->
+  <div id="settings-drawer-backdrop" class="drawer-backdrop" style="display: none;">
+    <aside id="settings-drawer" class="drawer-panel" aria-label="Account Settings">
+      <div class="drawer-header">
+        <h2>Account Settings</h2>
+        <button id="close-settings-btn" class="close-btn" aria-label="Close">&times;</button>
+      </div>
+
+      <div class="drawer-body">
+        <!-- Profile / Account Details Form -->
+        <form id="profile-settings-form" class="settings-form">
+          <h3>Driver Details</h3>
+
+          <div class="form-group">
+            <label for="settings-email">Email Address</label>
+            <input type="email" id="settings-email" class="portal-input" disabled />
+            <small>Contact management via Discord ticket to change your login email.</small>
+          </div>
+
+          <div class="form-group">
+            <label for="settings-username">HaulMP Username</label>
+            <input type="text" id="settings-username" class="portal-input" placeholder="Your driver username" required />
+          </div>
+
+          <div class="form-group">
+            <label for="settings-discord">Linked Discord ID</label>
+            <input type="text" id="settings-discord" class="portal-input" placeholder="Not linked yet" disabled />
+            <small>Contact management via Discord ticket to link or update your Discord ID.</small>
+          </div>
+
+          <button type="submit" id="save-profile-btn" class="btn-primary" style="border: none; cursor: pointer; width: 100%;">Save Profile Details</button>
+          <p id="profile-status-msg" class="status-text"></p>
+        </form>
+
+        <hr class="drawer-divider" />
+
+        <!-- Change Password Form -->
+        <form id="change-password-form" class="settings-form">
+          <h3>Change Password</h3>
+
+          <div class="form-group">
+            <label for="new-password">New Password</label>
+            <input type="password" id="new-password" class="portal-input" placeholder="Minimum 8 characters" minlength="8" required />
+          </div>
+
+          <div class="form-group">
+            <label for="confirm-password">Confirm New Password</label>
+            <input type="password" id="confirm-password" class="portal-input" placeholder="Re-enter new password" minlength="8" required />
+          </div>
+
+          <button type="submit" id="update-password-btn" class="btn-primary" style="border: none; cursor: pointer; width: 100%;">Update Password</button>
+          <p id="password-status-msg" class="status-text"></p>
+        </form>
+      </div>
+    </aside>
+  </div>
 
   <script src="portal.js"></script>
 </body>
