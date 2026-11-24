@@ -49,20 +49,30 @@ function showLogin() {
   if (settingsDrawer) settingsDrawer.classList.remove("open");
 }
 
-function showDashboard(user) {
+async function showDashboard(user) {
   if (loginSection) loginSection.style.display = "none";
   if (dashboardSection) dashboardSection.style.display = "block";
   if (openSettingsBtn) openSettingsBtn.style.display = "inline-block";
   if (logoutBtn) logoutBtn.style.display = "inline-block";
 
-  const displayName = (user.user_metadata && user.user_metadata.username) || user.email;
+  let currentUser = user;
+  const { data: freshData } = await supabaseClient.auth.getUser();
+  if (freshData && freshData.user) {
+    currentUser = freshData.user;
+  }
+
+  const displayName =
+    (currentUser.user_metadata &&
+      (currentUser.user_metadata.username || currentUser.user_metadata.haulmp_username)) ||
+    currentUser.email;
+
   if (driverEmailSpan) driverEmailSpan.textContent = displayName;
 
   if (pageType === "home") {
     loadLatestConvoy();
     loadAnnouncements();
   } else if (pageType === "disciplinaries") {
-    loadDisciplinaries(user);
+    loadDisciplinaries(currentUser);
   } else if (pageType === "docs") {
     loadDocs();
   }
@@ -115,8 +125,9 @@ if (forgotPasswordBtn) {
       loginError.textContent = "Sending password reset email...";
     }
 
+    const basePath = window.location.pathname.substring(0, window.location.pathname.lastIndexOf("/") + 1);
     const { error } = await supabaseClient.auth.resetPasswordForEmail(email, {
-      redirectTo: `${window.location.origin}/portal.html`,
+      redirectTo: `${window.location.origin}${basePath}portal.html`,
     });
 
     if (error) {
@@ -589,7 +600,6 @@ if (docSearchInput) {
   const backdropEl =
     sidebarEl.closest(".sidebar-backdrop, .drawer-backdrop, #sidebar-backdrop") || null;
 
-  // Inject close button styles once
   if (!document.getElementById("vortex-sidebar-close-style")) {
     const styleEl = document.createElement("style");
     styleEl.id = "vortex-sidebar-close-style";
@@ -675,7 +685,6 @@ if (docSearchInput) {
     }, 280);
   }
 
-  // Add animated close button at the top of the sidebar if not already present
   if (!sidebarEl.querySelector(".vortex-close-menu-btn")) {
     const headerBar = document.createElement("div");
     headerBar.className = "vortex-sidebar-header";
@@ -701,7 +710,6 @@ if (docSearchInput) {
     sidebarEl.insertBefore(headerBar, sidebarEl.firstChild);
   }
 
-  // Prevent holding down the mouse inside the sidebar to select text from closing it
   sidebarEl.addEventListener("mousedown", (e) => {
     e.stopPropagation();
   });
